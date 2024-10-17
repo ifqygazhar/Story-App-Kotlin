@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">StoryApp</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="your_new_world_of_stories_is_just_a_tap_away_explore_a_universe_filled_with_captivating_tales_from_thrilling_adventures_to_heartwarming_romances">Your new world of stories is just a tap away. Explore a universe filled with captivating tales, from thrilling adventures to heartwarming romances.</string>
+    <string name="welcome_to_story_app">Welcome to Story App</string>
+    <string name="validationPassword">Password must be at least 8 characters</string>
+    <string name="get_ready_to_share_story">Get Ready To Share Story ?</string>
+    <string name="please_login_first_to_continue">Please Login First to Continue</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="is_fun_to_share_yout_story_in_this_platform">Is Fun To Share Yout Story In This Platform !</string>
+    <string name="please_regist_your_data_first_to_make_account">Please Regist Your Data First To Make Account</string>
+    <string name="name">Name</string>
+    <string name="not_have_account">Not Have Account ?</string>
+    <string name="error_empty_name">Empty Name</string>
+    <string name="error_empty_email">Empty Email</string>
+    <string name="error_empty_password">Empty Password</string>
+    <string name="register_success">Register SuccessFully</string>
+</resources>
