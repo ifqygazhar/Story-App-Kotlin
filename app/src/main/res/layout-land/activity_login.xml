@@ -71,6 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        app:boxStrokeColor="@color/orange"
         app:layout_constraintStart_toEndOf="@+id/ivLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailTextView"
@@ -102,6 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        app:boxStrokeColor="@color/orange"
         app:endIconMode="password_toggle"
         app:layout_constraintStart_toEndOf="@+id/ivLogin"
         app:layout_constraintEnd_toEndOf="parent"
@@ -115,20 +117,34 @@
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/btnLogin"
-        style="@style/RoundedButton"
+    <FrameLayout
+        android:id="@+id/buttonFrame"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/orange"
-        android:text="@string/login"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/passwordEditTextLayout"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditTextLayout"
-        app:layout_constraintWidth_percent="0.5" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditTextLayout">
+
+        <!-- ProgressBar, initially hidden -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!-- Button -->
+        <Button
+            android:id="@+id/btnLogin"
+            style="@style/RoundedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/orange"
+            android:text="@string/login"
+            android:textSize="18sp" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

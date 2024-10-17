@@ -28,6 +28,13 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (savedInstanceState != null) {
+            binding.nameEditText.setText(savedInstanceState.getString("name"))
+            binding.emailEditText.setText(savedInstanceState.getString("email"))
+            binding.passwordEditText.setText(savedInstanceState.getString("password"))
+        }
+
+
         setupUI()
         observeViewModel()
 
@@ -39,8 +46,15 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("name", binding.nameEditText.text.toString())
+        outState.putString("email", binding.emailEditText.text.toString())
+        outState.putString("password", binding.passwordEditText.text.toString())
+    }
+
     private fun setupUI() {
-        binding.btnLogin.setOnClickListener {
+        binding.btnRegister?.setOnClickListener {
             val name = binding.nameEditText.text.toString().trim()
             val email = binding.emailEditText.text.toString().trim()
             val password = binding.passwordEditText.text.toString().trim()
@@ -69,12 +83,12 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        // Observe Loading State
+
         registerViewModel.isLoading.observe(this, Observer { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         })
 
-        // Observe Register Result
+
         registerViewModel.registerResult.observe(this, Observer { result ->
             when (result) {
                 is Result.Success -> {
@@ -90,7 +104,7 @@ class RegisterActivity : AppCompatActivity() {
                 }
 
                 is Result.Loading -> {
-                    // Handle loading state if needed
+
                 }
             }
         })
