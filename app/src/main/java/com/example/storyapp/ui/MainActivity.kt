@@ -7,16 +7,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.storyapp.R
+import com.example.storyapp.data.pref.UserPreferences
 import com.example.storyapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var userPreferences: UserPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        userPreferences = UserPreferences(this)
+
+        if (!userPreferences.getToken().isNullOrEmpty()) {
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
 
         binding.btnRegister.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
@@ -34,4 +45,5 @@ class MainActivity : AppCompatActivity() {
             insets
         }
     }
+
 }

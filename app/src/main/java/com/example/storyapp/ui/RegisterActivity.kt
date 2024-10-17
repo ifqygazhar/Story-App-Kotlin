@@ -85,13 +85,18 @@ class RegisterActivity : AppCompatActivity() {
     private fun observeViewModel() {
 
         registerViewModel.isLoading.observe(this, Observer { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            if (isLoading) {
+                showProgressBar()
+            } else {
+                hideProgressBar()
+            }
         })
 
 
         registerViewModel.registerResult.observe(this, Observer { result ->
             when (result) {
                 is Result.Success -> {
+                    hideProgressBar()
                     Toast.makeText(this, getString(R.string.register_success), Toast.LENGTH_SHORT)
                         .show()
                     val intent = Intent(this, LoginActivity::class.java)
@@ -100,13 +105,24 @@ class RegisterActivity : AppCompatActivity() {
                 }
 
                 is Result.Error -> {
+                    hideProgressBar()
                     Toast.makeText(this, result.error, Toast.LENGTH_SHORT).show()
                 }
 
                 is Result.Loading -> {
-
+                    showProgressBar()
                 }
             }
         })
+    }
+
+    private fun showProgressBar() {
+        binding.btnRegister.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        binding.btnRegister.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
     }
 }

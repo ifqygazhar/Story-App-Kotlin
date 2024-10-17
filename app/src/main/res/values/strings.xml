@@ -18,4 +18,5 @@
     <string name="error_empty_password">Empty Password</string>
     <string name="register_success">Register SuccessFully</string>
     <string name="login_success">Welcome Back</string>
+    <string name="logout">Logout</string>
 </resources>
