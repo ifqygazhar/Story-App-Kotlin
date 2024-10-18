@@ -131,8 +131,15 @@ class HomeActivity : AppCompatActivity() {
         homeViewModel.stories.observe(this, Observer { result ->
             when (result) {
                 is Result.Success -> {
+                    val stories = result.data
                     hideProgressBar()
-                    updateStories(result.data)
+                    if (stories.isEmpty()) {
+                        showEmptyState()
+                    } else {
+                        hideEmptyState()
+                        updateStories(stories)
+                    }
+
                 }
 
                 is Result.Loading -> {
@@ -155,6 +162,16 @@ class HomeActivity : AppCompatActivity() {
     private fun hideProgressBar() {
         binding.rvStory.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
+    }
+
+    private fun showEmptyState() {
+        binding.rvStory.visibility = View.GONE
+        binding.imgEmpty.visibility = View.VISIBLE
+    }
+
+    private fun hideEmptyState() {
+        binding.rvStory.visibility = View.VISIBLE
+        binding.imgEmpty.visibility = View.GONE
     }
 
 
