@@ -55,7 +55,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        binding.btnRegister?.setOnClickListener {
+        binding.btnRegister.setOnClickListener {
             val name = binding.nameEditText.text.toString().trim()
             val email = binding.emailEditText.text.toString().trim()
             val password = binding.passwordEditText.text.toString().trim()
@@ -68,7 +68,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun validateInputs(name: String, email: String, password: String): Boolean {
         var isValid = true
-        
+
         if (name.isEmpty()) {
             binding.nameEditTextLayout.error = getString(R.string.error_empty_name)
             isValid = false

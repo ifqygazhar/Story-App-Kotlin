@@ -21,4 +21,7 @@
     <string name="logout">Logout</string>
     <string name="press_again_for_exit">Press Again For Exit</string>
     <string name="validationEmail">Invalid email format</string>
+    <string name="detail">Detail</string>
+    <string name="logout_success">Logout Success</string>
+    <string name="invalid_story_id_or_token">Invalid story ID or token</string>
 </resources>

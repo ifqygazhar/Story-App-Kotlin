@@ -69,7 +69,7 @@ class EmailEditTextMaterial @JvmOverloads constructor(
         return null
     }
 
-    private fun isValidEmail(email: CharSequence?): Boolean {
+    private fun isValidEmail(email: CharSequence): Boolean {
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 

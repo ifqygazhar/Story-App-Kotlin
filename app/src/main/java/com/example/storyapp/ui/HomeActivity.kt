@@ -7,7 +7,6 @@ import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -24,6 +23,7 @@ import com.example.storyapp.databinding.ActivityHomeBinding
 import com.example.storyapp.ui.adapter.StoryAdapter
 import com.example.storyapp.ui.viewmodel.HomeViewModel
 import com.example.storyapp.ui.viewmodel.factory.HomeViewModelFactory
+import com.example.storyapp.util.showToast
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -58,7 +58,7 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 doubleBackToExitPressedOnce = true
-                showToast(getString(R.string.press_again_for_exit))
+                showToast(this@HomeActivity, getString(R.string.press_again_for_exit))
                 Handler(Looper.getMainLooper()).postDelayed({
                     doubleBackToExitPressedOnce = false
                 }, 2000)
@@ -81,7 +81,7 @@ class HomeActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_logout -> {
                 UserPreferences(this).clearToken()
-                showToast("Logout Success")
+                showToast(this, getString(R.string.logout_success))
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(this, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -97,7 +97,11 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        storyAdapter = StoryAdapter(listOf())
+        storyAdapter = StoryAdapter(listOf()) { storyId ->
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("storyId", storyId)
+            startActivity(intent)
+        }
         binding.rvStory.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
             adapter = storyAdapter
@@ -106,7 +110,11 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun updateStories(stories: List<ListStoryItem>) {
-        storyAdapter = StoryAdapter(stories)
+        storyAdapter = StoryAdapter(stories) { storyId ->
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("STORY_ID", storyId)
+            startActivity(intent)
+        }
         binding.rvStory.adapter = storyAdapter
     }
 
@@ -133,7 +141,7 @@ class HomeActivity : AppCompatActivity() {
 
                 is Result.Error -> {
                     hideProgressBar()
-                    showToast(result.error)
+                    showToast(this, result.error)
                 }
             }
         })
@@ -150,7 +158,4 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
 }
