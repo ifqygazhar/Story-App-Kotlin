@@ -2,6 +2,7 @@ package com.example.storyapp.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -67,17 +68,30 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun validateInputs(name: String, email: String, password: String): Boolean {
         var isValid = true
+        
         if (name.isEmpty()) {
             binding.nameEditTextLayout.error = getString(R.string.error_empty_name)
             isValid = false
+        } else {
+            binding.nameEditTextLayout.error = null
         }
+
         if (email.isEmpty()) {
             binding.emailEditTextLayout.error = getString(R.string.error_empty_email)
             isValid = false
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            binding.emailEditTextLayout.error = getString(R.string.validationEmail)
+            isValid = false
+        } else {
+            binding.emailEditTextLayout.error = null
         }
+
+
         if (password.isEmpty()) {
             binding.passwordEditTextLayout.error = getString(R.string.error_empty_password)
             isValid = false
+        } else {
+            binding.passwordEditTextLayout.error = null
         }
         return isValid
     }

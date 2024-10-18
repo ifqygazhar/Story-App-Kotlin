@@ -19,4 +19,6 @@
     <string name="register_success">Register SuccessFully</string>
     <string name="login_success">Welcome Back</string>
     <string name="logout">Logout</string>
+    <string name="press_again_for_exit">Press Again For Exit</string>
+    <string name="validationEmail">Invalid email format</string>
 </resources>
