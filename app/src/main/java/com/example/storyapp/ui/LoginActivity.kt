@@ -1,5 +1,7 @@
 package com.example.storyapp.ui
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
@@ -16,6 +18,7 @@ import com.example.storyapp.data.Result
 import com.example.storyapp.databinding.ActivityLoginBinding
 import com.example.storyapp.ui.viewmodel.LoginViewModel
 import com.example.storyapp.ui.viewmodel.factory.LoginViewModelFactory
+import com.example.storyapp.ui.widget.StoryAppWidget
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -84,7 +87,7 @@ class LoginActivity : AppCompatActivity() {
         } else {
             binding.passwordEditTextLayout.error = null
         }
-        
+
         return isValid
     }
 
@@ -107,9 +110,23 @@ class LoginActivity : AppCompatActivity() {
                     hideProgressBar()
                     Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT)
                         .show()
-                    val intent = Intent(this, HomeActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
+
+                    val appWidgetManager = AppWidgetManager.getInstance(application)
+                    val ids = appWidgetManager.getAppWidgetIds(
+                        ComponentName(application, StoryAppWidget::class.java)
+                    )
+
+                    appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
+
+                    val intent = Intent(this, StoryAppWidget::class.java)
+                    intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+                    sendBroadcast(intent)
+
+                    val homeIntent = Intent(this, HomeActivity::class.java)
+                    homeIntent.flags =
+                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(homeIntent)
                     finish()
                 }
 
