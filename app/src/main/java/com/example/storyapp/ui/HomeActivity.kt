@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -103,15 +104,21 @@ class HomeActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.menu_setting -> {
+                val intent = Intent(Settings.ACTION_LOCALE_SETTINGS)
+                startActivity(intent)
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun setupRecyclerView() {
-        storyAdapter = StoryAdapter(listOf()) { storyId ->
-            val intent = Intent(this, DetailActivity::class.java)
-            intent.putExtra("storyId", storyId)
-            startActivity(intent)
+        storyAdapter = StoryAdapter(this, listOf())
+        binding.rvStory.apply {
+            layoutManager = LinearLayoutManager(this@HomeActivity)
+            adapter = storyAdapter
         }
         binding.rvStory.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
@@ -121,11 +128,7 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun updateStories(stories: List<ListStoryItem>) {
-        storyAdapter = StoryAdapter(stories) { storyId ->
-            val intent = Intent(this, DetailActivity::class.java)
-            intent.putExtra("STORY_ID", storyId)
-            startActivity(intent)
-        }
+        storyAdapter = StoryAdapter(this, stories)
         binding.rvStory.adapter = storyAdapter
     }
 

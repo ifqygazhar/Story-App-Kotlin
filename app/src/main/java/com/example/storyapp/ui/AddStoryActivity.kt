@@ -84,7 +84,7 @@ class AddStoryActivity : AppCompatActivity() {
             when (result) {
                 is Result.Success -> {
                     hideProgressBar()
-                    showToast(this, "Story uploaded successfully!")
+                    showToast(this, getString(R.string.story_uploaded_successfully))
                     val intent = Intent(this, HomeActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
@@ -106,12 +106,12 @@ class AddStoryActivity : AppCompatActivity() {
         val description = binding.etDescription.text.toString().trim()
 
         if (description.isEmpty()) {
-            showToast(this, "Please provide a description.")
+            showToast(this, getString(R.string.please_provide_a_description))
             return
         }
 
         if (currentImageUri == null) {
-            showToast(this, "Please select an image.")
+            showToast(this, getString(R.string.please_select_an_image))
             return
         }
 
@@ -143,9 +143,9 @@ class AddStoryActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                showToast(this, "Permission request granted")
+                showToast(this, getString(R.string.permission_request_granted))
             } else {
-                showToast(this, "Permission request denied")
+                showToast(this, getString(R.string.permission_request_denied))
             }
         }
 

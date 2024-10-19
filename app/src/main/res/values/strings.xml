@@ -29,4 +29,15 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="upload">Upload</string>
+    <string name="story_uploaded_successfully">Story uploaded successfully!</string>
+    <string name="please_provide_a_description">Please provide a description.</string>
+    <string name="please_select_an_image">Please select an image.</string>
+    <string name="permission_request_granted">Permission request granted</string>
+    <string name="permission_request_denied">Permission request denied</string>
+    <string name="failed_take_picture">Failed Take Picture</string>
+    <string name="failed_open_camera">Failed Open Camera</string>
+    <string name="setting">Setting</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
 </resources>
