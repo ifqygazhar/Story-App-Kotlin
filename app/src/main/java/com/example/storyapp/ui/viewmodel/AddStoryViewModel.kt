@@ -1,5 +1,6 @@
 package com.example.storyapp.ui.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,18 @@ class AddStoryViewModel(private val storyRepository: StoryRepository) : ViewMode
 
     private val _uploadResult = MutableLiveData<Result<StoryUploadResponse>>()
     val uploadResult: LiveData<Result<StoryUploadResponse>> = _uploadResult
+
+    private val _currentImageUri = MutableLiveData<Uri?>()
+    val currentImageUri: LiveData<Uri?> = _currentImageUri
+
+    fun setImageUri(uri: Uri?) {
+        _currentImageUri.value = uri
+    }
+
+    fun getImageUri(): Uri? {
+        return _currentImageUri.value
+    }
+
 
     fun uploadStory(
         token: String,

@@ -1,5 +1,7 @@
 package com.example.storyapp.ui
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -24,6 +26,7 @@ import com.example.storyapp.databinding.ActivityHomeBinding
 import com.example.storyapp.ui.adapter.StoryAdapter
 import com.example.storyapp.ui.viewmodel.HomeViewModel
 import com.example.storyapp.ui.viewmodel.factory.HomeViewModelFactory
+import com.example.storyapp.ui.widget.StoryAppWidget
 import com.example.storyapp.util.showToast
 
 class HomeActivity : AppCompatActivity() {
@@ -93,6 +96,11 @@ class HomeActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_logout -> {
                 UserPreferences(this).clearToken()
+                val appWidgetManager = AppWidgetManager.getInstance(this)
+                val componentName = ComponentName(this, StoryAppWidget::class.java)
+                appWidgetManager.updateAppWidget(componentName, null)
+                sendBroadcast(intent)
+
                 showToast(this, getString(R.string.logout_success))
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(this, MainActivity::class.java)

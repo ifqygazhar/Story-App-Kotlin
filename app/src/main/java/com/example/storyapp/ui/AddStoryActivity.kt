@@ -50,6 +50,12 @@ class AddStoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
 
+        val savedImageUri = addStoryViewModel.getImageUri()
+        if (savedImageUri != null) {
+            currentImageUri = savedImageUri
+            showImage()
+        }
+
         binding.includeToolbar.toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -163,12 +169,14 @@ class AddStoryActivity : AppCompatActivity() {
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) {
+            addStoryViewModel.setImageUri(uri)
             currentImageUri = uri
             showImage()
         } else {
             Log.d("Photo Picker", "No media selected")
         }
     }
+
 
     private fun startCameraX() {
         val intent = Intent(this, CameraActivity::class.java)
@@ -179,15 +187,20 @@ class AddStoryActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) {
         if (it.resultCode == CAMERAX_RESULT) {
-            currentImageUri = it.data?.getStringExtra(CameraActivity.EXTRA_CAMERAX_IMAGE)?.toUri()
+            val uri = it.data?.getStringExtra(CameraActivity.EXTRA_CAMERAX_IMAGE)?.toUri()
+            addStoryViewModel.setImageUri(uri)
+            currentImageUri = uri
             showImage()
         }
     }
 
     private fun showImage() {
-        currentImageUri?.let {
-            Log.d("Image URI", "showImage: $it")
-            binding.ivPicture.setImageURI(it)
+        val imageUri = addStoryViewModel.getImageUri()
+        if (imageUri != null) {
+            currentImageUri = imageUri
+            binding.ivPicture.setImageURI(imageUri)
+        } else {
+            Log.d("Image URI", "No image to show")
         }
     }
 
