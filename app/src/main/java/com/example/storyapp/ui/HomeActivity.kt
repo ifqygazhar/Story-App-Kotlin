@@ -29,6 +29,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private var doubleBackToExitPressedOnce = false
     private lateinit var storyAdapter: StoryAdapter
+    private var token: String? = null
 
 
     private val homeViewModel: HomeViewModel by viewModels {
@@ -47,8 +48,13 @@ class HomeActivity : AppCompatActivity() {
         observeViewModel()
 
 
-        val token = UserPreferences(this).getToken()
+        token = UserPreferences(this).getToken()
         homeViewModel.getAllStories(token!!)
+
+        binding.fab.setOnClickListener {
+            val intent = Intent(this, AddStoryActivity::class.java)
+            startActivity(intent)
+        }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -70,6 +76,11 @@ class HomeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.getAllStories(token!!)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

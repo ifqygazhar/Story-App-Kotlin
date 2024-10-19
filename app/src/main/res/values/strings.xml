@@ -24,4 +24,9 @@
     <string name="detail">Detail</string>
     <string name="logout_success">Logout Success</string>
     <string name="invalid_story_id_or_token">Invalid story ID or token</string>
+    <string name="add_story">Add Story</string>
+    <string name="description">Description</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
 </resources>
