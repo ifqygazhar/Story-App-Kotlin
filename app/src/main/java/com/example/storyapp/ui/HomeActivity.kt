@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -53,6 +54,7 @@ class HomeActivity : AppCompatActivity() {
 
 
         token = UserPreferences(this).getToken()
+        loadWidget()
         homeViewModel.getAllStories(token!!)
 
         binding.fab.setOnClickListener {
@@ -98,8 +100,16 @@ class HomeActivity : AppCompatActivity() {
                 UserPreferences(this).clearToken()
                 val appWidgetManager = AppWidgetManager.getInstance(this)
                 val componentName = ComponentName(this, StoryAppWidget::class.java)
-                appWidgetManager.updateAppWidget(componentName, null)
-                sendBroadcast(intent)
+                val ids = appWidgetManager.getAppWidgetIds(componentName)
+                Log.d("HomeActivity", "Widget IDs: ${ids.joinToString()}")
+                appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
+
+                // Mengirim broadcast pembaruan widget
+                val updateIntent = Intent(this, StoryAppWidget::class.java)
+                updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+                sendBroadcast(updateIntent)
+
 
                 showToast(this, getString(R.string.logout_success))
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -194,6 +204,18 @@ class HomeActivity : AppCompatActivity() {
     private fun hideEmptyState() {
         binding.rvStory.visibility = View.VISIBLE
         binding.imgEmpty.visibility = View.GONE
+    }
+
+    private fun loadWidget() {
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val componentName = ComponentName(this, StoryAppWidget::class.java)
+        val ids = appWidgetManager.getAppWidgetIds(componentName)
+        Log.d("HomeActivity", "Widget IDs: ${ids.joinToString()}")
+        appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
+        val updateIntent = Intent(this, StoryAppWidget::class.java)
+        updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+        sendBroadcast(updateIntent)
     }
 
 

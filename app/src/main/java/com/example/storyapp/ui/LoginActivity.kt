@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
@@ -111,17 +112,17 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT)
                         .show()
 
-                    val appWidgetManager = AppWidgetManager.getInstance(application)
-                    val ids = appWidgetManager.getAppWidgetIds(
-                        ComponentName(application, StoryAppWidget::class.java)
-                    )
-
+                    val appWidgetManager = AppWidgetManager.getInstance(this)
+                    val componentName = ComponentName(this, StoryAppWidget::class.java)
+                    val ids = appWidgetManager.getAppWidgetIds(componentName)
+                    Log.d("LoginActivity", "Widget IDs: ${ids.joinToString()}")
                     appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
 
-                    val intent = Intent(this, StoryAppWidget::class.java)
-                    intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-                    sendBroadcast(intent)
+                    // Mengirim broadcast pembaruan widget
+                    val updateIntent = Intent(this, StoryAppWidget::class.java)
+                    updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                    updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+                    sendBroadcast(updateIntent)
 
                     val homeIntent = Intent(this, HomeActivity::class.java)
                     homeIntent.flags =

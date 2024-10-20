@@ -37,4 +37,7 @@
     <string name="failed_take_picture">Gagal Mengambil Gambar</string>
     <string name="failed_open_camera">Gagal Membuka Kamera</string>
     <string name="setting">Pengaturan</string>
+    <string name="add_widget">Tambah widget</string>
+    <string name="app_widget_description">Ini deskripsi widget</string>
+    <string name="please_login_first">Tolong Login Terlebih Dahulu</string>
 </resources>

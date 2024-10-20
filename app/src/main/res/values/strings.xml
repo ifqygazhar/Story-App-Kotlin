@@ -37,7 +37,7 @@
     <string name="failed_take_picture">Failed Take Picture</string>
     <string name="failed_open_camera">Failed Open Camera</string>
     <string name="setting">Setting</string>
-    <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
+    <string name="please_login_first">Please Login First</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.storyapp.ui.widget
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
@@ -21,10 +22,6 @@ class StoryRemoteViewsFactory(private val context: Context) :
     private val storyRepository: StoryRepository = Injection.storyRepository(context)
 
     override fun onCreate() {
-        // Inisialisasi jika diperlukan
-    }
-
-    override fun onDataSetChanged() {
         runBlocking {
             val token = UserPreferences(context).getToken()
             if (token != null) {
@@ -34,19 +31,51 @@ class StoryRemoteViewsFactory(private val context: Context) :
                     is Result.Success -> {
                         storyList.clear()
                         storyList.addAll(result.data.listStory)
+                        Log.d("StoryRemoteViewsFactory", "Data berhasil diambil: ${storyList.size}")
                     }
 
                     is Result.Error -> {
                         storyList.clear()
+                        Log.e("StoryRemoteViewsFactory", "Gagal mengambil data: ${result.error}")
                     }
 
                     is Result.Loading -> {}
                 }
             } else {
                 storyList.clear()
+                Log.d("StoryRemoteViewsFactory", "Token tidak ditemukan, data dikosongkan.")
             }
         }
     }
+
+    override fun onDataSetChanged() {
+        Log.d("StoryRemoteViewsFactory", "onDataSetChanged terpanggil")
+        runBlocking {
+            val token = UserPreferences(context).getToken()
+            if (token != null) {
+                val result =
+                    storyRepository.getAllStories(token, page = null, size = null, location = 0)
+                when (result) {
+                    is Result.Success -> {
+                        storyList.clear()
+                        storyList.addAll(result.data.listStory)
+                        Log.d("StoryRemoteViewsFactory", "Data berhasil diambil: ${storyList.size}")
+                    }
+
+                    is Result.Error -> {
+                        storyList.clear()
+                        Log.e("StoryRemoteViewsFactory", "Gagal mengambil data: ${result.error}")
+                    }
+
+                    is Result.Loading -> {}
+                }
+            } else {
+                storyList.clear()
+                Log.d("StoryRemoteViewsFactory", "Token tidak ditemukan, data dikosongkan.")
+            }
+        }
+    }
+
 
     override fun onDestroy() {
         storyList.clear()

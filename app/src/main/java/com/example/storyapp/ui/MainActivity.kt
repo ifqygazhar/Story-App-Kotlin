@@ -1,5 +1,7 @@
 package com.example.storyapp.ui
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.storyapp.R
 import com.example.storyapp.data.pref.UserPreferences
 import com.example.storyapp.databinding.ActivityMainBinding
+import com.example.storyapp.ui.widget.StoryAppWidget
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -23,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         userPreferences = UserPreferences(this)
+        setupWidget()
 
         if (!userPreferences.getToken().isNullOrEmpty()) {
             val intent = Intent(this, HomeActivity::class.java)
@@ -48,4 +52,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupWidget() {
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val componentName = ComponentName(this, StoryAppWidget::class.java)
+
+
+        val ids = appWidgetManager.getAppWidgetIds(componentName)
+        appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
+
+
+        val updateIntent = Intent(this, StoryAppWidget::class.java)
+        updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+        sendBroadcast(updateIntent)
+    }
 }
