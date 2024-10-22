@@ -9,18 +9,21 @@ import com.example.storyapp.data.remote.response.ListStoryItem
 import com.example.storyapp.data.repository.StoryRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val storyRepository: StoryRepository) : ViewModel() {
+class StoryMapViewModel(private val storyRepository: StoryRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
     private val _stories = MutableLiveData<Result<List<ListStoryItem>>>()
     val stories: LiveData<Result<List<ListStoryItem>>> = _stories
 
-    fun getAllStories(token: String, page: Int? = null, size: Int? = null, location: Int = 0) {
+    fun getAllStoriesWithMap(
+        token: String,
+        location: Int = 1
+    ) {
         _isLoading.value = true
         viewModelScope.launch {
             _stories.value =
-                storyRepository.getAllStories(token, page, size, location).let { result ->
+                storyRepository.getAllStoriesWithMap(token, location).let { result ->
                     if (result is Result.Success) {
                         _isLoading.value = false
                         Result.Success(result.data.listStory)

@@ -10,36 +10,24 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
-import com.example.storyapp.data.Result
 import com.example.storyapp.data.pref.UserPreferences
-import com.example.storyapp.data.remote.response.ListStoryItem
 import com.example.storyapp.databinding.ActivityHomeBinding
-import com.example.storyapp.ui.adapter.StoryAdapter
-import com.example.storyapp.ui.viewmodel.HomeViewModel
-import com.example.storyapp.ui.viewmodel.factory.HomeViewModelFactory
 import com.example.storyapp.ui.widget.StoryAppWidget
 import com.example.storyapp.util.showToast
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private var doubleBackToExitPressedOnce = false
-    private lateinit var storyAdapter: StoryAdapter
     private var token: String? = null
 
-
-    private val homeViewModel: HomeViewModel by viewModels {
-        HomeViewModelFactory.getInstance(this)
-    }
+    private val SELECTED_FRAGMENT_KEY = "selected_fragment"
+    private var selectedFragmentIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,19 +36,26 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.includeToolbar.toolbar)
 
-
-        setupRecyclerView()
-        observeViewModel()
-
-
         token = UserPreferences(this).getToken()
         loadWidget()
-        homeViewModel.getAllStories(token!!)
 
-        binding.fab.setOnClickListener {
-            val intent = Intent(this, AddStoryActivity::class.java)
-            startActivity(intent)
+        if (savedInstanceState != null) {
+            selectedFragmentIndex = savedInstanceState.getInt(SELECTED_FRAGMENT_KEY, 0)
+        } else {
+            selectedFragmentIndex = 0
         }
+
+        loadFragment(selectedFragmentIndex)
+
+        binding.bottomBar.itemActiveIndex = selectedFragmentIndex
+        
+        binding.bottomBar.setOnItemSelectedListener { position ->
+            if (position != selectedFragmentIndex) {
+                selectedFragmentIndex = position
+                loadFragment(selectedFragmentIndex)
+            }
+        }
+
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -84,15 +79,24 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        homeViewModel.getAllStories(token!!)
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_appbar, menu)
         return true
     }
+
+    private fun loadFragment(index: Int) {
+        val selectedFragment = when (index) {
+            0 -> StoryWithoutMapFragment()
+            1 -> StoryMapFragment()
+            else -> StoryWithoutMapFragment()
+        }
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main_fragment, selectedFragment)
+            .commit()
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -132,79 +136,6 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupRecyclerView() {
-        storyAdapter = StoryAdapter(this, listOf())
-        binding.rvStory.apply {
-            layoutManager = LinearLayoutManager(this@HomeActivity)
-            adapter = storyAdapter
-        }
-        binding.rvStory.apply {
-            layoutManager = LinearLayoutManager(this@HomeActivity)
-            adapter = storyAdapter
-        }
-    }
-
-
-    private fun updateStories(stories: List<ListStoryItem>) {
-        storyAdapter = StoryAdapter(this, stories)
-        binding.rvStory.adapter = storyAdapter
-    }
-
-    private fun observeViewModel() {
-
-        homeViewModel.isLoading.observe(this, Observer { isLoading ->
-            if (isLoading) {
-                showProgressBar()
-            } else {
-                hideProgressBar()
-            }
-        })
-
-        homeViewModel.stories.observe(this, Observer { result ->
-            when (result) {
-                is Result.Success -> {
-                    val stories = result.data
-                    hideProgressBar()
-                    if (stories.isEmpty()) {
-                        showEmptyState()
-                    } else {
-                        hideEmptyState()
-                        updateStories(stories)
-                    }
-
-                }
-
-                is Result.Loading -> {
-                    showProgressBar()
-                }
-
-                is Result.Error -> {
-                    hideProgressBar()
-                    showToast(this, result.error)
-                }
-            }
-        })
-    }
-
-    private fun showProgressBar() {
-        binding.rvStory.visibility = View.GONE
-        binding.progressBar.visibility = View.VISIBLE
-    }
-
-    private fun hideProgressBar() {
-        binding.rvStory.visibility = View.VISIBLE
-        binding.progressBar.visibility = View.GONE
-    }
-
-    private fun showEmptyState() {
-        binding.rvStory.visibility = View.GONE
-        binding.imgEmpty.visibility = View.VISIBLE
-    }
-
-    private fun hideEmptyState() {
-        binding.rvStory.visibility = View.VISIBLE
-        binding.imgEmpty.visibility = View.GONE
-    }
 
     private fun loadWidget() {
         val appWidgetManager = AppWidgetManager.getInstance(this)

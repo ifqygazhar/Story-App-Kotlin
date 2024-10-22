@@ -5,9 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.data.repository.StoryRepository
 import com.example.storyapp.di.Injection
-import com.example.storyapp.ui.viewmodel.HomeViewModel
+import com.example.storyapp.ui.viewmodel.StoryWithoutMapViewModel
 
-class HomeViewModelFactory(
+class StoryWithoutMapViewModelFactory(
+    
     private val storyRepository: StoryRepository,
 
     ) :
@@ -15,19 +16,19 @@ class HomeViewModelFactory(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel(storyRepository) as T
+        if (modelClass.isAssignableFrom(StoryWithoutMapViewModel::class.java)) {
+            return StoryWithoutMapViewModel(storyRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
 
     companion object {
         @Volatile
-        private var instance: HomeViewModelFactory? = null
+        private var instance: StoryWithoutMapViewModelFactory? = null
 
-        fun getInstance(context: Context): HomeViewModelFactory =
+        fun getInstance(context: Context): StoryWithoutMapViewModelFactory =
             instance ?: synchronized(this) {
-                instance ?: HomeViewModelFactory(
+                instance ?: StoryWithoutMapViewModelFactory(
                     Injection.storyRepository(context),
                 )
             }.also { instance = it }

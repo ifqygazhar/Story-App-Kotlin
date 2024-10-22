@@ -40,4 +40,8 @@
     <string name="add_widget">Tambah widget</string>
     <string name="app_widget_description">Ini deskripsi widget</string>
     <string name="please_login_first">Tolong Login Terlebih Dahulu</string>
+    <string name="title_activity_maps">Peta</string>
+    <string name="home">Story</string>
+    <string name="story_map">Story Dengan Map</string>
+    <string name="retry">Coba Lagi</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.storyapp.data.remote.retrofit
 
+import com.example.storyapp.data.local.database.ListStoryItem
 import com.example.storyapp.data.remote.response.LoginResponse
 import com.example.storyapp.data.remote.response.RegisterResponse
 import com.example.storyapp.data.remote.response.StoryDetailResponse
@@ -34,6 +35,14 @@ interface ApiService {
     ): LoginResponse
 
     @GET("stories")
+    suspend fun getAllStoriesPaging(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int? = null,
+        @Query("size") size: Int? = null,
+        @Query("location") location: Int = 0
+    ): List<ListStoryItem>
+
+    @GET("stories")
     suspend fun getAllStories(
         @Header("Authorization") token: String,
         @Query("page") page: Int? = null,
@@ -56,4 +65,10 @@ interface ApiService {
         @Part("lat") lat: RequestBody?,
         @Part("lon") lon: RequestBody?
     ): StoryUploadResponse
+
+    @GET("stories")
+    suspend fun getAllStoriesWithMap(
+        @Header("Authorization") token: String,
+        @Query("location") location: Int = 1
+    ): StoryResponse
 }
