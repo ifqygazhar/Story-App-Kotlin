@@ -33,14 +33,7 @@ interface ApiService {
         @Field("email") email: String,
         @Field("password") password: String
     ): LoginResponse
-
-    @GET("stories")
-    suspend fun getAllStoriesPaging(
-        @Header("Authorization") token: String,
-        @Query("page") page: Int? = null,
-        @Query("size") size: Int? = null,
-        @Query("location") location: Int = 0
-    ): List<ListStoryItem>
+    
 
     @GET("stories")
     suspend fun getAllStories(

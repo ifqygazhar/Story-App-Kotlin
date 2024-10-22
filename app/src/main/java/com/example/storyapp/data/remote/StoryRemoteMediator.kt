@@ -49,10 +49,10 @@ class StoryRemoteMediator(
 
         try {
             val response =
-                apiService.getAllStoriesPaging("Bearer $token", page, state.config.pageSize)
-            Log.d("RemoteMediator", "Fetched ${response.size} stories from API for page $page")
+                apiService.getAllStories("Bearer $token", page, state.config.pageSize)
 
-            val endOfPaginationReached = response.isEmpty()
+
+            val endOfPaginationReached = response.listStory.isEmpty()
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     Log.d("RemoteMediator", "Clearing remote keys and stories in the database")
@@ -60,7 +60,7 @@ class StoryRemoteMediator(
                     database.storyDao().deleteAll()
                 }
 
-                val keys = response.map { story ->
+                val keys = response.listStory.map { story ->
                     RemoteEntity(
                         id = story.id,
                         prevKey = if (page == INITIAL_PAGE_INDEX) null else page - 1,
@@ -68,15 +68,22 @@ class StoryRemoteMediator(
                     )
                 }
 
-                Log.d("RemoteMediator", "Inserting ${keys.size} remote keys into database")
                 database.remoteDao().insertAll(keys)
 
-                Log.d("RemoteMediator", "Inserting ${response.size} stories into database")
-                database.storyDao().insertStory(response)
+                database.storyDao().insertStory(response.listStory.map {
+                    ListStoryItem(
+                        photoUrl = it.photoUrl,
+                        createdAt = it.createdAt,
+                        name = it.name,
+                        description = it.description,
+                        lon = it.lon as Double?,
+                        id = it.id,
+                        lat = it.lat as Double?
+                    )
+                })
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (exception: Exception) {
-            Log.e("RemoteMediator", "Error fetching or saving stories: ${exception.message}")
             return MediatorResult.Error(exception)
         }
 

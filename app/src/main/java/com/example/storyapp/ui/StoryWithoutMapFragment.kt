@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.data.pref.UserPreferences
 import com.example.storyapp.databinding.FragmentStoryWithoutMapBinding
@@ -14,6 +15,7 @@ import com.example.storyapp.ui.adapter.LoadingStateAdapter
 import com.example.storyapp.ui.adapter.StoryAdapterPaging
 import com.example.storyapp.ui.viewmodel.StoryWithoutMapViewModel
 import com.example.storyapp.ui.viewmodel.factory.StoryWithoutMapViewModelFactory
+import com.example.storyapp.util.showToast
 
 class StoryWithoutMapFragment : Fragment() {
 
@@ -54,16 +56,44 @@ class StoryWithoutMapFragment : Fragment() {
                 storyAdapter.retry()
             }
         )
-        val token = UserPreferences(requireContext()).getToken()
-        storyWithoutMapViewModel.stories(token = token!!)
-            .observe(viewLifecycleOwner) { pagingData ->
-                storyAdapter.submitData(lifecycle, pagingData)
+        storyAdapter.addLoadStateListener { loadState ->
+            binding.progressBar.visibility =
+                if (loadState.source.refresh is LoadState.Loading) View.VISIBLE else View.GONE
+
+            binding.imgEmpty.visibility =
+                if (loadState.source.refresh is LoadState.NotLoading && storyAdapter.itemCount == 0) View.VISIBLE else View.GONE
+
+
+            val errorState = loadState.source.refresh as? LoadState.Error
+                ?: loadState.source.append as? LoadState.Error
+                ?: loadState.source.prepend as? LoadState.Error
+
+            errorState?.let {
+                it.error.localizedMessage?.let { it1 -> showToast(requireContext(), it1) }
             }
+        }
+
+
+        observeViewModel()
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        val token = UserPreferences(requireContext()).getToken()
+        storyWithoutMapViewModel.stories(token = token!!)
+            .observe(viewLifecycleOwner) { pagingData ->
+                storyAdapter.submitData(lifecycle, pagingData)
+            }
     }
 }
