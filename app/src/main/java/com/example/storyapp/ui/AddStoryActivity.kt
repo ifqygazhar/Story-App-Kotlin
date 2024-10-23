@@ -1,6 +1,7 @@
 package com.example.storyapp.ui
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -110,9 +111,9 @@ class AddStoryActivity : AppCompatActivity() {
                 is Result.Success -> {
                     hideProgressBar()
                     showToast(this, getString(R.string.story_uploaded_successfully))
-                    val intent = Intent(this, HomeActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
+
+                    setResult(Activity.RESULT_OK)
+                    finish()
                 }
 
                 is Result.Loading -> showProgressBar()

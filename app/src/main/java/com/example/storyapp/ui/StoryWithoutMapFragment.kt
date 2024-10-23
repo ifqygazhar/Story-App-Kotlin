@@ -1,10 +1,12 @@
 package com.example.storyapp.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
@@ -26,6 +28,20 @@ class StoryWithoutMapFragment : Fragment() {
     private var _binding: FragmentStoryWithoutMapBinding? = null
     private val binding get() = _binding!!
 
+    private val addStoryLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+
+            storyAdapter.refresh()
+            storyAdapter.addLoadStateListener { loadState ->
+                if (loadState.source.refresh is LoadState.NotLoading) {
+                    binding.rvStory.smoothScrollToPosition(0)
+                }
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,7 +58,7 @@ class StoryWithoutMapFragment : Fragment() {
 
         binding.fab.setOnClickListener {
             val intent = Intent(requireContext(), AddStoryActivity::class.java)
-            startActivity(intent)
+            addStoryLauncher.launch(intent)
         }
 
 
@@ -91,3 +107,5 @@ class StoryWithoutMapFragment : Fragment() {
             }
     }
 }
+
+
