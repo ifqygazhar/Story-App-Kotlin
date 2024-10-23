@@ -39,6 +39,7 @@ kotlinxCoroutinesTest = "1.6.1"
 mockitoCore = "4.4.0"
 mockitoInline = "4.4.0"
 playServicesLocation = "21.3.0"
+espressoIntents = "3.4.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -87,6 +88,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espressoIntents" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

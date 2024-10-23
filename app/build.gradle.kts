@@ -85,6 +85,7 @@ dependencies {
     //unitest
     androidTestImplementation(libs.androidx.core.testing) //InstantTaskExecutorRule
     androidTestImplementation(libs.kotlinx.coroutines.test) //TestDispatcher
+    androidTestImplementation(libs.espresso.intents)
 
     testImplementation(libs.androidx.core.testing) // InstantTaskExecutorRule
     testImplementation(libs.kotlinx.coroutines.test) //TestDispatcher

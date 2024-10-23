@@ -83,12 +83,6 @@ class StoryWithoutMapFragment : Fragment() {
         _binding = null
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        observeViewModel()
-    }
-
     private fun observeViewModel() {
         val token = UserPreferences(requireContext()).getToken()
         storyWithoutMapViewModel.stories(token = token!!)
