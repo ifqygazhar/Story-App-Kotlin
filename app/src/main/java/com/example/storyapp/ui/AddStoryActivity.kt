@@ -26,6 +26,8 @@ import com.example.storyapp.ui.viewmodel.factory.AddStoryViewModelFactory
 import com.example.storyapp.util.reduceFileImage
 import com.example.storyapp.util.showToast
 import com.example.storyapp.util.uriToFile
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -33,6 +35,10 @@ import okhttp3.RequestBody.Companion.toRequestBody
 
 class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var currentLat: Double? = null
+    private var currentLon: Double? = null
 
     private val addStoryViewModel: AddStoryViewModel by viewModels {
         AddStoryViewModelFactory.getInstance(this)
@@ -59,6 +65,19 @@ class AddStoryActivity : AppCompatActivity() {
         binding.includeToolbar.toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+// Handle switch for enabling location
+        binding.switchLocation.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                getCurrentLocation()
+            } else {
+                currentLat = null
+                currentLon = null
+            }
+        }
+
 
         if (!allPermissionsGranted()) {
             requestPermissionLauncher.launch(REQUIRED_PERMISSION)
@@ -122,17 +141,15 @@ class AddStoryActivity : AppCompatActivity() {
         }
 
         val file = uriToFile(currentImageUri!!, this)
-
         val compressedFile = file.reduceFileImage()
 
-        val descriptionRequestBody =
-            description.toRequestBody("text/plain".toMediaTypeOrNull())
+        val descriptionRequestBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
         val photoRequestBody = compressedFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val photoMultipart =
             MultipartBody.Part.createFormData("photo", compressedFile.name, photoRequestBody)
 
-        val latRequestBody = null
-        val lonRequestBody = null
+        val latRequestBody = currentLat?.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
+        val lonRequestBody = currentLon?.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
 
         addStoryViewModel.uploadStory(
             token,
@@ -193,6 +210,38 @@ class AddStoryActivity : AppCompatActivity() {
             showImage()
         }
     }
+
+    private fun getCurrentLocation() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location ->
+                    if (location != null) {
+                        currentLat = location.latitude
+                        currentLon = location.longitude
+                        showToast(this, "Location Added")
+                    } else {
+                        showToast(this, "Location not found")
+                    }
+                }
+        } else {
+            requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    private val requestLocationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            getCurrentLocation()
+        } else {
+            showToast(this, "Permission Location Denied")
+        }
+    }
+
 
     private fun showImage() {
         val imageUri = addStoryViewModel.getImageUri()
