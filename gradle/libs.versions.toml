@@ -11,6 +11,9 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.2"
 constraintlayout = "2.1.4"
+mockitoInlineVersion = "5.0.0"
+mockk = "1.12.0"
+pagingCommon = "3.1.1"
 retrofit = "2.9.0"
 loggingInterceptor = "4.11.0"
 picasso = "2.71828"
@@ -31,6 +34,10 @@ roomPaging = "2.4.0-rc01"
 roomCompiler = "2.5.2"
 roomKtx = "2.5.2"
 pagingRuntimeKtx = "3.1.0"
+coreTesting = "2.1.0"
+kotlinxCoroutinesTest = "1.6.1"
+mockitoCore = "4.4.0"
+mockitoInline = "4.4.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -38,6 +45,7 @@ androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.r
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraView" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "pagingCommon" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -46,6 +54,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
+mockito-inline-v500 = { module = "org.mockito:mockito-inline", version.ref = "mockitoInlineVersion" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
@@ -70,6 +80,11 @@ androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "ro
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
+
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
